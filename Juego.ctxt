@@ -1,0 +1,25 @@
+#BlueJ class context
+comment0.target=Juego
+comment1.params=posteInicial\ posteFinal\ numeroDePiezas
+comment1.target=Juego(java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer)
+comment10.params=pasos\ offset
+comment10.target=boolean\ esSolucionValida(java.util.List,\ java.lang.Integer)
+comment11.params=estado
+comment11.target=boolean\ esEstadoValido(Estado)
+comment2.params=
+comment2.target=java.util.List\ getSolucion()
+comment3.params=padre
+comment3.target=java.util.List\ obtenerMovimientosPosibles(PosibleSolucion)
+comment4.params=posibleSolucion
+comment4.target=java.util.List\ getPasos(PosibleSolucion)
+comment5.params=numeroDePiezas\ origen\ destino\ pivote
+comment5.target=java.util.List\ moverPilaBasico(java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer)
+comment6.params=numeroDePiezas\ origen\ destino\ postes
+comment6.target=java.util.List\ moverPilaAvanzado(java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer,\ java.util.List)
+comment7.params=
+comment7.target=java.util.List\ getSolucionDyVBasico()
+comment8.params=
+comment8.target=java.util.List\ getSolucionDyVAvanzado()
+comment9.params=pasos
+comment9.target=void\ reproducirPasos(java.util.List)
+numComments=12

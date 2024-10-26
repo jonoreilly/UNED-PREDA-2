@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=FactoriaEstados
+comment1.params=numeroDePostes\ numeroDePiezas
+comment1.target=Estado\ getEstadoInicial(java.lang.Integer,\ java.lang.Integer)
+comment2.params=numeroDePostes\ numeroDePiezas
+comment2.target=Estado\ getEstadoFinal(java.lang.Integer,\ java.lang.Integer)
+comment3.params=a\ b
+comment3.target=boolean\ sonEstadosIguales(Estado,\ Estado)
+numComments=4

@@ -1,0 +1,11 @@
+#BlueJ class context
+comment0.target=Paso
+comment1.params=origen\ destino
+comment1.target=Paso(java.lang.Integer,\ java.lang.Integer)
+comment2.params=
+comment2.target=java.lang.Integer\ getOrigen()
+comment3.params=
+comment3.target=java.lang.Integer\ getDestino()
+comment4.params=
+comment4.target=java.lang.String\ toString()
+numComments=5

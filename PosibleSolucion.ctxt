@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=PosibleSolucion
+comment1.params=paso\ estado\ padre
+comment1.target=PosibleSolucion(Paso,\ Estado,\ PosibleSolucion)
+comment2.params=
+comment2.target=Paso\ getPaso()
+comment3.params=
+comment3.target=Estado\ getEstado()
+comment4.params=
+comment4.target=PosibleSolucion\ getPadre()
+comment5.params=
+comment5.target=java.lang.String\ toString()
+numComments=6
