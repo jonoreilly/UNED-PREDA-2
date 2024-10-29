@@ -159,26 +159,46 @@ public class Juego
         
     }
 
-    // Movimientos igual a ??
+    // Movimientos igual a (2^piezas)/(postes/3)
     private List<Paso> moverPilaAvanzado(Integer numeroDePiezas, Integer origen, Integer destino, List<Integer> postes) {
         
         List<Paso> pasos = new ArrayList<>();
     
         List<Integer> postesSinOrigenNiDestino = postes.stream().filter(p -> p != origen && p != destino).toList();
         
-        if (numeroDePiezas == (postesSinOrigenNiDestino.size() + 1)) {
+        if (numeroDePiezas <= (postesSinOrigenNiDestino.size() + 1)) {
+            
+            int piezasMovidas = 0;
             
             for (Integer poste : postesSinOrigenNiDestino) {
                 
+                if (piezasMovidas >= numeroDePiezas) {
+                    
+                    break;
+                
+                }
+                
                 pasos.add(new Paso(origen, poste));
+                
+                piezasMovidas++;
                 
             }
                         
             pasos.add(new Paso(origen, destino));
             
+            piezasMovidas = 0;
+            
             for (Integer poste : postesSinOrigenNiDestino.reversed()) {
                 
+                if (piezasMovidas >= numeroDePiezas) {
+                    
+                    break;
+                
+                }
+                
                 pasos.add(new Paso(poste, destino));
+                
+                piezasMovidas++;
                 
             }
             
@@ -192,6 +212,98 @@ public class Juego
             
             pasos.addAll(moverPilaAvanzado(numeroDePiezas - 1, pivote, destino, postes));
             
+        }
+        
+        return pasos;
+        
+    }
+    
+    
+    // Movimientos igual a (2^piezas)/(postes/3)
+    private List<Paso> moverPilaSuperAvanzado(Integer numeroDePiezas, Integer origen, Integer destino, List<Integer> postes) {
+        
+        List<Paso> pasos = new ArrayList<>();
+    
+        List<Integer> postesSinOrigen = postes.stream().filter(p -> p != origen).toList();
+    
+        List<Integer> postesSinOrigenNiDestino = postes.stream().filter(p -> p != origen && p != destino).toList();
+            
+        if (postesSinOrigenNiDestino.size() == 1 || numeroDePiezas == 1) {
+            
+            Integer pivote = postesSinOrigenNiDestino.get(0);
+            
+            pasos.addAll(moverPilaBasico(numeroDePiezas, origen, destino, pivote));
+            
+        } else {
+            
+            //   x x x
+            //   x x x x x
+            //   x x x x x 
+            // x x x x x x
+            // | | | | | | |
+    
+            int piezasPorPoste = (numeroDePiezas - 1) / postesSinOrigenNiDestino.size();
+    
+            int piezasExtra = (numeroDePiezas - 1) % postesSinOrigenNiDestino.size();
+            
+            for (int i = 0; i < postesSinOrigenNiDestino.size(); i++) { 
+                
+                int piezasAMover = piezasPorPoste;
+                
+                if (i < piezasExtra) {
+                
+                    piezasAMover++;
+                
+                }
+                
+                if (piezasAMover == 0) {
+                 
+                    continue;
+                    
+                }
+                
+                Integer destinoParcial = postesSinOrigenNiDestino.get(i);
+                
+                List<Integer> postesParcial = new ArrayList<>(postesSinOrigenNiDestino.subList(i, postesSinOrigenNiDestino.size()));
+                
+                postesParcial.add(origen);
+                
+                postesParcial.add(destino);
+                
+                pasos.addAll(moverPilaSuperAvanzado(piezasAMover, origen, destinoParcial, postesParcial));
+                
+            }
+            
+            pasos.add(new Paso(origen, destino));
+            
+            for (int i = postesSinOrigenNiDestino.size() - 1; i >= 0; i--) { 
+                
+                int piezasAMover = piezasPorPoste;
+                
+                if (i < piezasExtra) {
+                
+                    piezasAMover++;
+                
+                }
+                
+                if (piezasAMover == 0) {
+                 
+                    continue;
+                    
+                }
+                
+                Integer origenParcial = postesSinOrigenNiDestino.get(i);
+                
+                List<Integer> postesParcial = new ArrayList<>(postesSinOrigenNiDestino.subList(i, postesSinOrigenNiDestino.size()));
+                
+                postesParcial.add(origen);
+                
+                postesParcial.add(destino);
+                
+                pasos.addAll(moverPilaSuperAvanzado(piezasAMover, origenParcial, destino, postesParcial));
+                
+            }
+        
         }
         
         return pasos;
@@ -262,7 +374,43 @@ public class Juego
         
     }
     
-    public void reproducirPasos(List<Paso> pasos) throws Exception {
+    public List<Paso> getSolucionDyVSuperAvanzado() throws Exception {
+        
+        int numeroDePostes = this.posteFinal - (this.posteInicial - 1);
+        
+        if (numeroDePostes < 3 && numeroDePiezas > 1) {
+            
+            throw new Exception("El problema no tiene solucion con menos de 3 postes");
+            
+        }
+        
+        List<Integer> postes = new ArrayList<>();
+        
+        for (int poste = posteInicial; poste <= posteFinal; poste++) {
+            
+            postes.add(poste);
+            
+        }
+        
+        long tiempoInicio = System.currentTimeMillis();
+        
+        List<Paso> pasos = moverPilaSuperAvanzado(numeroDePiezas, posteInicial, posteFinal, postes);
+        
+        long tiempoFin = System.currentTimeMillis();
+        
+        long tiempoEjecucion = tiempoFin - tiempoInicio;
+        
+        System.out.println("DyV SuperAvanzado (" + tiempoEjecucion/1000 + "s) : " + pasos.size() + " = " + pasos);
+                
+        System.out.println("Solucion valida: " + esSolucionValida(pasos, posteInicial));
+        
+        // reproducirPasos(pasos);
+        
+        return pasos;
+        
+    }
+    
+    public void reproducirPasos(List<Paso> pasos, int offset) throws Exception {
         
         int numeroDePostes = this.posteFinal - (this.posteInicial - 1);
         
@@ -276,9 +424,9 @@ public class Juego
             
             System.out.println(paso);
             
-            Integer pieza = postes.get(paso.getOrigen()).pop();
+            Integer pieza = postes.get(paso.getOrigen() - offset).pop();
             
-            postes.get(paso.getDestino()).add(pieza);
+            postes.get(paso.getDestino() - offset).add(pieza);
             
             estado = new Estado(postes);
             
