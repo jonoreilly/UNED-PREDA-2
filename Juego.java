@@ -31,7 +31,6 @@ public class Juego
     
     public List<Paso> getSolucion() throws Exception {
         
-        
         int numeroDePostes = this.posteFinal - (this.posteInicial - 1);
         
         Estado estadoInicial = FactoriaEstados.getEstadoInicial(numeroDePostes, this.numeroDePiezas);

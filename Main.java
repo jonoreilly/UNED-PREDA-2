@@ -1,5 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Writer;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.io.FileOutputStream;
 
 public class Main
 {
@@ -30,16 +34,49 @@ public class Main
                 
                 Juego juego = new Juego(posteInicial, posteFinal, piezas);
                 
-                int tamanioSolucionDyVSuperAvanzado = juego.getSolucionDyVSuperAvanzado().size();
+                // DyV Super Avanzado
                 
-                int tamanioSolucion =juego.getSolucion().size();
+                long tiempoInicioDyVSuperAvanzado = System.currentTimeMillis();
+        
+                List<Paso> solucionDyVSuperAvanzado = juego.getSolucionDyVSuperAvanzado();
+                        
+                long tiempoFinDyVSuperAvanzado = System.currentTimeMillis();
                 
-                if (tamanioSolucionDyVSuperAvanzado != tamanioSolucion) {
+                long tiempoEjecucionDyVSuperAvanzado = tiempoFinDyVSuperAvanzado - tiempoInicioDyVSuperAvanzado;
+
+                int tamanioSolucionDyVSuperAvanzado = solucionDyVSuperAvanzado.size();
+                
+                // Fuerza Bruta
+                
+                long tiempoInicioFuerzaBruta = System.currentTimeMillis();
+                        
+                List<Paso> solucionFuerzaBruta =juego.getSolucion();
+                        
+                long tiempoFinFuerzaBruta = System.currentTimeMillis();
+                
+                long tiempoEjecucionFuerzaBruta = tiempoFinFuerzaBruta - tiempoInicioFuerzaBruta;
+                
+                int tamanioSolucionFuerzaBruta =solucionFuerzaBruta.size();
+                
+                try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                              new FileOutputStream("filename.txt", true), "utf-8"))) {
+                   writer.append("\nposteFinal: " + posteFinal + ", piezas: " + piezas + "\n");
+                   writer.append("DyVSuperAvanzado (" + tiempoEjecucionDyVSuperAvanzado/1000 + "s) [" + tamanioSolucionDyVSuperAvanzado + "]: " + solucionDyVSuperAvanzado + "\n");
+                   writer.append("FuerzaBruta (" + tiempoEjecucionFuerzaBruta/1000 + "s) [" + tamanioSolucionFuerzaBruta + "]: " + solucionFuerzaBruta + "\n");
+                
+                if (tamanioSolucionDyVSuperAvanzado != tamanioSolucionFuerzaBruta) {
+                    
+                    writer.append("#########################\n");
+                    writer.append("# SOLUCIONES DIFERENTES #\n");
+                    writer.append("#########################\n");
+                    
                     
                     System.out.println("#########################");
                     System.out.println("# SOLUCIONES DIFERENTES #");
                     System.out.println("#########################");
                     
+                }
+                
                 }
             
             }
