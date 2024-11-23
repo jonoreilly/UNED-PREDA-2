@@ -12,34 +12,60 @@ public class Main
         
         int posteInicial = 1;
         
-        //int posteFinal = 5;
+        int empiezaDesdePoste = 6;
         
-        //int piezas = 7;
+        int empiezaDesdePiezas = 10;
         
-        //System.out.println("posteInicial: " + posteInicial + ", posteFinal: " + posteFinal + ", piezas: " + piezas);
-        
-        // Juego juego = new Juego(posteInicial, posteFinal, piezas);
-        
-        // juego.getSolucionDyVBasico();
-        // juego.getSolucionDyVAvanzado();
-        // juego.getSolucionDyVSuperAvanzado();
-        // juego.getSolucion();
-        
-        
-        for (int posteFinal = 3; posteFinal <= 8; posteFinal++) {
+        for (int posteFinal = 3; posteFinal <= 10; posteFinal++) {
+            
+            if (posteFinal < empiezaDesdePoste) {
+                continue;
+            }
                 
-            for (int piezas = 1; piezas <= 8; piezas++) {
+            for (int piezas = 1; piezas <= 10; piezas++) {
+                    
+                if (posteFinal == empiezaDesdePoste && piezas < empiezaDesdePiezas) {
+                    continue;
+                }
                 
                 System.out.println("posteInicial: " + posteInicial + ", posteFinal: " + posteFinal + ", piezas: " + piezas);
+                                
+                // DyV Basico
                 
-                Juego juego = new Juego(posteInicial, posteFinal, piezas);
+                long tiempoInicioDyVBasico = System.currentTimeMillis();
+        
+                List<Paso> solucionDyVBasico = SolucionadorDyVBasico.getSolucionDyVBasico(posteInicial, posteFinal, piezas);
+                
+                boolean esSolucionDyVBasicoValida = Juego.esSolucionValida(posteInicial, posteFinal, piezas, solucionDyVBasico, posteInicial);
+                
+                long tiempoFinDyVBasico = System.currentTimeMillis();
+                
+                long tiempoEjecucionDyVBasico = tiempoFinDyVBasico - tiempoInicioDyVBasico;
+
+                int tamanioSolucionDyVBasico = solucionDyVBasico.size();
+                
+                // DyV Avanzado
+                
+                long tiempoInicioDyVAvanzado = System.currentTimeMillis();
+        
+                List<Paso> solucionDyVAvanzado = SolucionadorDyVAvanzado.getSolucionDyVAvanzado(posteInicial, posteFinal, piezas);
+                        
+                boolean esSolucionDyVAvanzadoValida = Juego.esSolucionValida(posteInicial, posteFinal, piezas, solucionDyVAvanzado, posteInicial);
+                
+                long tiempoFinDyVAvanzado = System.currentTimeMillis();
+                
+                long tiempoEjecucionDyVAvanzado = tiempoFinDyVAvanzado - tiempoInicioDyVAvanzado;
+
+                int tamanioSolucionDyVAvanzado = solucionDyVAvanzado.size();
                 
                 // DyV Super Avanzado
                 
                 long tiempoInicioDyVSuperAvanzado = System.currentTimeMillis();
         
-                List<Paso> solucionDyVSuperAvanzado = juego.getSolucionDyVSuperAvanzado();
+                List<Paso> solucionDyVSuperAvanzado = SolucionadorDyVSuperAvanzado.getSolucionDyVSuperAvanzado(posteInicial, posteFinal, piezas);
                         
+                boolean esSolucionDyVSuperAvanzadoValida = Juego.esSolucionValida(posteInicial, posteFinal, piezas, solucionDyVSuperAvanzado, posteInicial);
+                
                 long tiempoFinDyVSuperAvanzado = System.currentTimeMillis();
                 
                 long tiempoEjecucionDyVSuperAvanzado = tiempoFinDyVSuperAvanzado - tiempoInicioDyVSuperAvanzado;
@@ -50,8 +76,10 @@ public class Main
                 
                 long tiempoInicioFuerzaBruta = System.currentTimeMillis();
                         
-                List<Paso> solucionFuerzaBruta =juego.getSolucion();
+                List<Paso> solucionFuerzaBruta = SolucionadorFuerzaBruta.getSolucionFuerzaBruta(posteInicial, posteFinal, piezas);
                         
+                boolean esSolucionFuerzaBrutaValida = Juego.esSolucionValida(posteInicial, posteFinal, piezas, solucionFuerzaBruta, 0);
+                
                 long tiempoFinFuerzaBruta = System.currentTimeMillis();
                 
                 long tiempoEjecucionFuerzaBruta = tiempoFinFuerzaBruta - tiempoInicioFuerzaBruta;
@@ -59,57 +87,31 @@ public class Main
                 int tamanioSolucionFuerzaBruta =solucionFuerzaBruta.size();
                 
                 try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-                              new FileOutputStream("filename.txt", true), "utf-8"))) {
-                   writer.append("\nposteFinal: " + posteFinal + ", piezas: " + piezas + "\n");
-                   writer.append("DyVSuperAvanzado (" + tiempoEjecucionDyVSuperAvanzado/1000 + "s) [" + tamanioSolucionDyVSuperAvanzado + "]: " + solucionDyVSuperAvanzado + "\n");
-                   writer.append("FuerzaBruta (" + tiempoEjecucionFuerzaBruta/1000 + "s) [" + tamanioSolucionFuerzaBruta + "]: " + solucionFuerzaBruta + "\n");
-                
-                if (tamanioSolucionDyVSuperAvanzado != tamanioSolucionFuerzaBruta) {
+                              new FileOutputStream("soluciones.txt", true), "utf-8"))) {
+                    writer.append("\nposteFinal: " + posteFinal + ", piezas: " + piezas + "\n");
+                    writer.append("DyVBasico " + (esSolucionDyVBasicoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVBasico/1000 + "s) [" + tamanioSolucionDyVBasico + "]: " + solucionDyVBasico + "\n");
+                    writer.append("DyVAvanzado " + (esSolucionDyVAvanzadoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVAvanzado/1000 + "s) [" + tamanioSolucionDyVAvanzado + "]: " + solucionDyVAvanzado + "\n");
+                    writer.append("DyVSuperAvanzado " + (esSolucionDyVSuperAvanzadoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVSuperAvanzado/1000 + "s) [" + tamanioSolucionDyVSuperAvanzado + "]: " + solucionDyVSuperAvanzado + "\n");
+                    writer.append("FuerzaBruta " + (esSolucionFuerzaBrutaValida ? "" : "ERROR") + " (" + tiempoEjecucionFuerzaBruta/1000 + "s) [" + tamanioSolucionFuerzaBruta + "]: " + solucionFuerzaBruta + "\n");
                     
-                    writer.append("#########################\n");
-                    writer.append("# SOLUCIONES DIFERENTES #\n");
-                    writer.append("#########################\n");
-                    
-                    
-                    System.out.println("#########################");
-                    System.out.println("# SOLUCIONES DIFERENTES #");
-                    System.out.println("#########################");
-                    
-                }
+                    if (tamanioSolucionDyVSuperAvanzado != tamanioSolucionFuerzaBruta) {
+                        
+                        writer.append("#########################\n");
+                        writer.append("# SOLUCIONES DIFERENTES #\n");
+                        writer.append("#########################\n");
+                        
+                        
+                        System.out.println("#########################");
+                        System.out.println("# SOLUCIONES DIFERENTES #");
+                        System.out.println("#########################");
+                        
+                    }
                 
                 }
             
             }
         
         }
-       
-        /*
-        // posteInicial = 1
-        // posteFinal = 5
-        // piezas = 7
-        List<Paso> pasos = new ArrayList<>();
-        pasos.add(new Paso(0,1));
-        pasos.add(new Paso(0,2));
-        pasos.add(new Paso(0,3));
-        pasos.add(new Paso(0,4));
-        pasos.add(new Paso(1,2));
-        pasos.add(new Paso(0,1));
-        pasos.add(new Paso(3,1));
-        pasos.add(new Paso(0,3));
-        pasos.add(new Paso(4,3));
-        pasos.add(new Paso(0,4));
-        pasos.add(new Paso(3,0));
-        pasos.add(new Paso(3,4));
-        pasos.add(new Paso(1,3));
-        pasos.add(new Paso(1,4));
-        pasos.add(new Paso(0,4));
-        pasos.add(new Paso(2,0));
-        pasos.add(new Paso(3,4));
-        pasos.add(new Paso(2,4));
-        pasos.add(new Paso(0,4));
-        juego.reproducirPasos(pasos, 0);
-        */
-        
         
     }
     

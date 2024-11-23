@@ -6,29 +6,13 @@ public class Estado {
     
     private List<Stack<Integer>> postes;
     
+    private String id;
+    
     public Estado(List<Stack<Integer>> postes) {
         
         this.postes = postes;
         
-    }
-    
-    public int getNumeroDePostes() {
-        
-        return postes.size();
-        
-    }
-
-    public int getNumeroDePiezas() {
-        
-        int numeroDePiezas = 0;
-        
-        for (Stack<Integer> poste : this.postes) {
-            
-            numeroDePiezas += poste.size();
-            
-        }
-        
-        return numeroDePiezas;
+        this.id = FactoriaEstados.getIdEstado(this);
         
     }
     
@@ -47,6 +31,32 @@ public class Estado {
         }
         
         return clon;
+        
+    }
+    
+    public int getNumeroDePostes() {
+        
+        return this.postes.size();
+        
+    }
+
+    public int getNumeroDePiezas() {
+        
+        int numeroDePiezas = 0;
+        
+        for (Stack<Integer> poste : this.postes) {
+            
+            numeroDePiezas += poste.size();
+            
+        }
+        
+        return numeroDePiezas;
+        
+    }
+    
+    public String getId() {
+        
+        return this.id;
         
     }
     

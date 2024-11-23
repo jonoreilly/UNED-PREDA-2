@@ -1,5 +1,0 @@
-#BlueJ class context
-comment0.target=Solucionador
-comment1.params=nodoInicial\ esSolucion\ sonIguales\ explorarNodo
-comment1.target=java.lang.Object\ getSolucion(java.lang.Object,\ java.util.function.Function,\ java.util.function.BiFunction,\ java.util.function.Function)
-numComments=2

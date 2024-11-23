@@ -66,48 +66,48 @@ public class FactoriaEstados {
         return new Estado(postes);
         
     }
+
+    public static boolean sonEstadosEquivalentes(Estado a, Estado b) {
+        
+        return a.getId().equals(b.getId());
+        
+    }
     
-    public static boolean sonEstadosIguales(Estado a, Estado b) {
+    public static String getIdEstado(Estado estado) {
         
-        List<Stack<Integer>> postesA = a.getPostes();
+        List<Stack<Integer>> postes = estado.getPostes();
         
-        List<Stack<Integer>> postesB = b.getPostes();
+        Stack<Integer> posteFinal = postes.removeLast();
         
-        if (postesA.size() != postesB.size()) {
-            
-            return false;
-            
-        }
-        
-        for (int i = 0; i < postesA.size(); i++) {
-            
-            Stack<Integer> posteA = postesA.get(i);
-            
-            Stack<Integer> posteB = postesB.get(i);
-            
-            if (posteA.size() != posteB.size()) {
-                
-                return false;
-                
-            }
-                
-            for (int j = 0; j < posteA.size(); j++) {
-                
-                Integer piezaA = posteA.get(j);
-                
-                Integer piezaB = posteB.get(j);
-                
-                if (piezaA != piezaB) {
+        String id = "id-" 
+            + String.join(",", posteFinal.stream().map(p -> p.toString()).toList()) + ";" 
+            + String.join(";", postes.stream().sorted((a, b) 
+                -> {
                     
-                    return false;
+                    Integer valorA = 0;
+                    
+                    Integer valorB = 0;
+                    
+                    if (a.size() > 0) {
+                        
+                        valorA = a.getLast();  
+                        
+                    }
+                    
+                    if (b.size() > 0) {
+                        
+                        valorB = b.getLast();  
+                        
+                    }
+                    
+                    return valorA.compareTo(valorB);
                     
                 }
-            
-            }
-            
-        }
+                ).map(poste 
+                -> String.join(",", poste.stream().map(p -> p.toString()).toList())
+                ).toList());
         
-        return true;
+        return id;
         
     }
 

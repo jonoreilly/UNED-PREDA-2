@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=SolucionadorDyVBasico
+comment1.params=posteInicial\ posteFinal\ numeroDePiezas
+comment1.target=java.util.List\ getSolucionDyVBasico(java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer)
+comment2.params=numeroDePiezas\ origen\ destino\ pivote
+comment2.target=java.util.List\ moverPilaBasico(java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer)
+numComments=3

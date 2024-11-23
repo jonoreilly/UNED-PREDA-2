@@ -1,15 +1,15 @@
 import java.util.List;
 import java.util.ArrayList;
 
-public class PosibleSolucion {
+public class Nodo {
     
     private Paso paso;
     
     private Estado estado;
     
-    private PosibleSolucion padre;
+    private Nodo padre;
     
-    public PosibleSolucion(Paso paso, Estado estado, PosibleSolucion padre) {
+    public Nodo(Paso paso, Estado estado, Nodo padre) {
         
         this.paso = paso;
         
@@ -31,7 +31,7 @@ public class PosibleSolucion {
     
     }
 
-    public PosibleSolucion getPadre() {
+    public Nodo getPadre() {
 
         return this.padre;
     
