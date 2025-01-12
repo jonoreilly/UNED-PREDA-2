@@ -202,7 +202,7 @@ public class IO {
     
         for(Paso paso : pasos) {
             
-            System.out.println(paso.getOrigen() + " " + paso.getDestino() + "\n");
+            System.out.println(paso.getOrigen() + " " + paso.getDestino());
             
         }
         

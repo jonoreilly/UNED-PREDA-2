@@ -26,7 +26,7 @@ public class Paso {
     
     public String toString() {
         
-        return this.origen + "-" + this.destino;
+        return this.origen + "->" + this.destino;
         
     }
     
