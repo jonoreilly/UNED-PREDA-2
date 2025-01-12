@@ -1,11 +1,11 @@
 #BlueJ class context
-comment0.target=SolucionadorFuerzaBruta
+comment0.target=SolucionadorVueltaAtras
 comment1.params=posteInicial\ posteFinal\ numeroDePiezas
-comment1.target=java.util.List\ getSolucionFuerzaBruta(java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer)
+comment1.target=java.util.List\ getSolucion(java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer)
 comment2.params=posteInicial\ posteFinal\ numeroDePiezas
 comment2.target=Nodo\ obtenerNodoSolucion(java.lang.Integer,\ java.lang.Integer,\ java.lang.Integer)
 comment3.params=padre
 comment3.target=java.util.List\ obtenerMovimientosPosibles(Nodo)
-comment4.params=nodo
-comment4.target=java.util.List\ getPasosRealizados(Nodo)
+comment4.params=nodo\ posteInicial
+comment4.target=java.util.List\ getPasosRealizados(Nodo,\ java.lang.Integer)
 numComments=5

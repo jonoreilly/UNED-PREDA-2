@@ -1,35 +1,79 @@
-import java.util.ArrayList;
 import java.util.List;
-import java.io.Writer;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.FileOutputStream;
+import java.util.Arrays;
 
 public class Main
 {
     
-    public static void main() throws Exception {
+    public static void main(String[] args) throws Exception {
         
+        List<String> argumentos = Arrays.asList(args);
+        
+        List<String> opciones = Arrays.asList("-h", "-t");
+        
+        List<String> ficheros = argumentos.stream().filter(s -> !opciones.contains(s)).toList();
+        
+        if (argumentos.contains("-h")) {
+            
+            IO.mostrarAyuda();
+            
+            return;
+            
+        }
+        
+        IO.TRAZA = argumentos.contains("-t");
+        
+        DatosEntrada datosEntrada;
+        
+        if (ficheros.size() > 0) {
+            
+            String ficheroEntrada = ficheros.get(0);
+            
+            datosEntrada = IO.leerArchivoEntrada(ficheroEntrada);
+            
+        } else {
+            
+            datosEntrada = IO.leerDatosPorConsola();
+            
+        }
+        
+        List<Paso> solucion = SolucionadorDyVSuperAvanzado.getSolucion(
+            datosEntrada.getPosteInicial(), 
+            datosEntrada.getPosteFinal(), 
+            datosEntrada.getNumeroDePiezas()
+            );
+        
+        if (ficheros.size() > 1) {
+            
+            IO.escribirResultado(ficheros.get(1), solucion);
+            
+        } else {
+            
+            IO.mostrarResultadoPorPantalla(solucion);
+            
+        }
+        
+        /*
+                 
         int posteInicial = 1;
         
-        int empiezaDesdePoste = 6;
+        int empiezaDesdePoste = 3;
         
-        int empiezaDesdePiezas = 10;
+        int empiezaDesdePiezas = 1;
         
-        for (int posteFinal = 3; posteFinal <= 10; posteFinal++) {
+        for (int posteFinal = 3; posteFinal <= 20; posteFinal++) {
             
             if (posteFinal < empiezaDesdePoste) {
                 continue;
             }
                 
-            for (int piezas = 1; piezas <= 10; piezas++) {
+            for (int piezas = 1; piezas <= 20; piezas++) {
                     
                 if (posteFinal == empiezaDesdePoste && piezas < empiezaDesdePiezas) {
                     continue;
                 }
                 
                 System.out.println("posteInicial: " + posteInicial + ", posteFinal: " + posteFinal + ", piezas: " + piezas);
-                                
+            
                 // DyV Basico
                 
                 long tiempoInicioDyVBasico = System.currentTimeMillis();
@@ -57,7 +101,7 @@ public class Main
                 long tiempoEjecucionDyVAvanzado = tiempoFinDyVAvanzado - tiempoInicioDyVAvanzado;
 
                 int tamanioSolucionDyVAvanzado = solucionDyVAvanzado.size();
-                
+                               
                 // DyV Super Avanzado
                 
                 long tiempoInicioDyVSuperAvanzado = System.currentTimeMillis();
@@ -88,11 +132,13 @@ public class Main
                 
                 try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                               new FileOutputStream("soluciones.txt", true), "utf-8"))) {
-                    writer.append("\nposteFinal: " + posteFinal + ", piezas: " + piezas + "\n");
-                    writer.append("DyVBasico " + (esSolucionDyVBasicoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVBasico/1000 + "s) [" + tamanioSolucionDyVBasico + "]: " + solucionDyVBasico + "\n");
-                    writer.append("DyVAvanzado " + (esSolucionDyVAvanzadoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVAvanzado/1000 + "s) [" + tamanioSolucionDyVAvanzado + "]: " + solucionDyVAvanzado + "\n");
-                    writer.append("DyVSuperAvanzado " + (esSolucionDyVSuperAvanzadoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVSuperAvanzado/1000 + "s) [" + tamanioSolucionDyVSuperAvanzado + "]: " + solucionDyVSuperAvanzado + "\n");
-                    writer.append("FuerzaBruta " + (esSolucionFuerzaBrutaValida ? "" : "ERROR") + " (" + tiempoEjecucionFuerzaBruta/1000 + "s) [" + tamanioSolucionFuerzaBruta + "]: " + solucionFuerzaBruta + "\n");
+                    //writer.append("\nposteFinal: " + posteFinal + ", piezas: " + piezas + "\n");
+                    //writer.append("DyVBasico " + (esSolucionDyVBasicoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVBasico/1000 + "s) [" + tamanioSolucionDyVBasico + "]: " + solucionDyVBasico + "\n");
+                    //writer.append("DyVAvanzado " + (esSolucionDyVAvanzadoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVAvanzado/1000 + "s) [" + tamanioSolucionDyVAvanzado + "]: " + solucionDyVAvanzado + "\n");
+                    //writer.append("DyVSuperAvanzado " + (esSolucionDyVSuperAvanzadoValida ? "" : "ERROR") + " (" + tiempoEjecucionDyVSuperAvanzado/1000 + "s) [" + tamanioSolucionDyVSuperAvanzado + "]: " + solucionDyVSuperAvanzado + "\n");
+                    //writer.append("FuerzaBruta " + (esSolucionFuerzaBrutaValida ? "" : "ERROR") + " (" + tiempoEjecucionFuerzaBruta/1000 + "s) [" + tamanioSolucionFuerzaBruta + "]: " + solucionFuerzaBruta + "\n");
+                    
+                    writer.append(posteFinal + ", " + piezas + ", " + tamanioSolucionDyVSuperAvanzado + "\n");
                     
                     if (tamanioSolucionDyVSuperAvanzado != tamanioSolucionFuerzaBruta) {
                         
@@ -113,6 +159,8 @@ public class Main
         
         }
         
+                */
+               
     }
     
 }

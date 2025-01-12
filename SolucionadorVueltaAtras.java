@@ -4,13 +4,15 @@ import java.util.function.Function;
 import java.util.function.BiFunction;
 import java.util.Stack;
 
-public class SolucionadorFuerzaBruta {
+public class SolucionadorVueltaAtras {
     
-    public static List<Paso> getSolucionFuerzaBruta(Integer posteInicial, Integer posteFinal, Integer numeroDePiezas) throws Exception {
-                    
+    public static List<Paso> getSolucion(Integer posteInicial, Integer posteFinal, Integer numeroDePiezas) throws Exception {
+    
+        IO.traza("Buscando solucion con Vuelta Atras para: { posteInicial: " + posteInicial + ", posteFinal: " + posteFinal + ", numeroDePiezas: " + numeroDePiezas);
+    
         long tiempoInicio = System.currentTimeMillis();
         
-        Nodo solucion = SolucionadorFuerzaBruta.obtenerNodoSolucion(posteInicial, posteFinal, numeroDePiezas);
+        Nodo solucion = SolucionadorVueltaAtras.obtenerNodoSolucion(posteInicial, posteFinal, numeroDePiezas);
         
         long tiempoFin = System.currentTimeMillis();
         
@@ -22,11 +24,17 @@ public class SolucionadorFuerzaBruta {
         
         }
         
-        List<Paso> pasos = SolucionadorFuerzaBruta.getPasosRealizados(solucion);
+        List<Paso> pasos = SolucionadorVueltaAtras.getPasosRealizados(solucion, posteInicial);
         
-        System.out.println("FuerzaBruta (" + tiempoEjecucion/1000 + "s) : " + pasos.size() + " = " + pasos);
-        
-        System.out.println("Solucion valida: " + Juego.esSolucionValida(posteInicial, posteFinal, numeroDePiezas, pasos, 0));
+        if (IO.TRAZA) {
+            
+            IO.traza("Vuelta atras (" + tiempoEjecucion/1000 + "s) : " + pasos.size() + " = " + pasos);
+            
+            IO.traza("Solucion valida: " + Juego.esSolucionValida(posteInicial, posteFinal, numeroDePiezas, pasos));
+            
+            Juego.reproducirPasos(posteInicial, posteFinal, numeroDePiezas, pasos);
+                    
+        }
         
         return pasos;
         
@@ -50,9 +58,17 @@ public class SolucionadorFuerzaBruta {
 
         nodosParaExplorar.add(nodoInicial);
         
+        int iteracion = 0;
+        
         while (true) {
             
+            iteracion++;
+            
+            IO.traza("Iteracion: " + iteracion + ", nodosParaExplorar: " + nodosParaExplorar.size());
+            
             if (nodosParaExplorar.size() == 0) {
+                
+                IO.traza("No quedan nodos por explorar, solucion no encontrada");
                 
                 return null;
                 
@@ -138,7 +154,7 @@ public class SolucionadorFuerzaBruta {
         
     }
         
-    public static List<Paso> getPasosRealizados(Nodo nodo) {
+    public static List<Paso> getPasosRealizados(Nodo nodo, Integer posteInicial) {
         
         List<Paso> pasos = new ArrayList<>();
         
@@ -148,9 +164,11 @@ public class SolucionadorFuerzaBruta {
         
         }
         
-        pasos.addAll(SolucionadorFuerzaBruta.getPasosRealizados(nodo.getPadre()));
+        pasos.addAll(SolucionadorVueltaAtras.getPasosRealizados(nodo.getPadre(), posteInicial));
         
-        pasos.add(nodo.getPaso());
+        Paso paso = nodo.getPaso();
+        
+        pasos.add(new Paso(paso.getOrigen() + posteInicial, paso.getDestino() + posteInicial));
         
         return pasos;
         

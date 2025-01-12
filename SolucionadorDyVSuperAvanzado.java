@@ -3,16 +3,10 @@ import java.util.ArrayList;
 
 public class SolucionadorDyVSuperAvanzado {
 
-    public static List<Paso> getSolucionDyVSuperAvanzado(Integer posteInicial, Integer posteFinal, Integer numeroDePiezas) throws Exception {
-        
-        int numeroDePostes = posteFinal - (posteInicial - 1);
-        
-        if (numeroDePostes < 3 && numeroDePiezas > 1) {
-            
-            throw new Exception("El problema no tiene solucion con menos de 3 postes");
-            
-        }
-        
+    public static List<Paso> getSolucion(Integer posteInicial, Integer posteFinal, Integer numeroDePiezas) throws Exception {
+                
+        IO.traza("Buscando solucion con Divide y Venceras Super Avanzado para: { posteInicial: " + posteInicial + ", posteFinal: " + posteFinal + ", numeroDePiezas: " + numeroDePiezas);
+    
         List<Integer> postes = new ArrayList<>();
         
         for (int poste = posteInicial; poste <= posteFinal; poste++) {
@@ -23,24 +17,27 @@ public class SolucionadorDyVSuperAvanzado {
         
         long tiempoInicio = System.currentTimeMillis();
         
-        List<Paso> pasos = moverPilaSuperAvanzado(numeroDePiezas, posteInicial, posteFinal, postes);
+        List<Paso> pasos = moverPila(numeroDePiezas, posteInicial, posteFinal, postes);
         
         long tiempoFin = System.currentTimeMillis();
         
         long tiempoEjecucion = tiempoFin - tiempoInicio;
         
-        System.out.println("DyV SuperAvanzado (" + tiempoEjecucion/1000 + "s) : " + pasos.size() + " = " + pasos);
+        if (IO.TRAZA) {
                 
-        System.out.println("Solucion valida: " + Juego.esSolucionValida(posteInicial, posteFinal, numeroDePiezas, pasos, posteInicial));
-        
-        // reproducirPasos(pasos);
+            IO.traza("Divide y Venceras Super Avanzado (" + tiempoEjecucion/1000 + "s) : " + pasos.size() + " = " + pasos);
+                            
+            IO.traza("Solucion valida: " + Juego.esSolucionValida(posteInicial, posteFinal, numeroDePiezas, pasos));
+            
+            Juego.reproducirPasos(posteInicial, posteFinal, numeroDePiezas, pasos);
+            
+        }
         
         return pasos;
         
     }
         
-    // Movimientos igual a (2^piezas)/(postes/3)
-    private static List<Paso> moverPilaSuperAvanzado(Integer numeroDePiezas, Integer origen, Integer destino, List<Integer> postes) {
+    private static List<Paso> moverPila(Integer numeroDePiezas, Integer origen, Integer destino, List<Integer> postes) {
         
         List<Paso> pasos = new ArrayList<>();
     
@@ -56,19 +53,13 @@ public class SolucionadorDyVSuperAvanzado {
             
             Integer pivote = postesSinOrigenNiDestino.get(0);
         
-            pasos.addAll(moverPilaSuperAvanzado(numeroDePiezas - 1, origen, pivote, postes));
+            pasos.addAll(moverPila(numeroDePiezas - 1, origen, pivote, postes));
             
             pasos.add(new Paso(origen, destino));
             
-            pasos.addAll(moverPilaSuperAvanzado(numeroDePiezas - 1, pivote, destino, postes));
+            pasos.addAll(moverPila(numeroDePiezas - 1, pivote, destino, postes));
             
         } else {
-            
-            //   x x x
-            //   x x x x x
-            //   x x x x x 
-            // x x x x x x
-            // | | | | | | |
     
             int piezasPorPoste = (numeroDePiezas - 1) / postesSinOrigenNiDestino.size();
     
@@ -98,7 +89,7 @@ public class SolucionadorDyVSuperAvanzado {
                 
                 postesParcial.add(destino);
                 
-                pasos.addAll(moverPilaSuperAvanzado(piezasAMover, origen, destinoParcial, postesParcial));
+                pasos.addAll(moverPila(piezasAMover, origen, destinoParcial, postesParcial));
                 
             }
             
@@ -128,7 +119,7 @@ public class SolucionadorDyVSuperAvanzado {
                 
                 postesParcial.add(destino);
                 
-                pasos.addAll(moverPilaSuperAvanzado(piezasAMover, origenParcial, destino, postesParcial));
+                pasos.addAll(moverPila(piezasAMover, origenParcial, destino, postesParcial));
                 
             }
         

@@ -6,33 +6,33 @@ import java.util.function.BiFunction;
 
 public class Juego {
     
-    public static void reproducirPasos(Integer posteInicial, Integer posteFinal, Integer numeroDePiezas, List<Paso> pasos, int offset) throws Exception {
+    public static void reproducirPasos(Integer posteInicial, Integer posteFinal, Integer numeroDePiezas, List<Paso> pasos) throws Exception {
         
         int numeroDePostes = posteFinal - (posteInicial - 1);
         
         Estado estado = FactoriaEstados.getEstadoInicial(numeroDePostes, numeroDePiezas);
         
-        System.out.println(estado);
+        IO.traza(estado.toString());
         
         for (Paso paso : pasos) {
             
             List<Stack<Integer>> postes = estado.getPostes();
             
-            System.out.println(paso);
+            IO.traza(paso.toString());
             
-            Integer pieza = postes.get(paso.getOrigen() - offset).pop();
+            Integer pieza = postes.get(paso.getOrigen() - posteInicial).pop();
             
-            postes.get(paso.getDestino() - offset).add(pieza);
+            postes.get(paso.getDestino() - posteInicial).add(pieza);
             
             estado = new Estado(postes);
             
-            System.out.println(estado);
+            IO.traza(estado.toString());
             
         }
-        
+            
     }
     
-    public static boolean esSolucionValida(Integer posteInicial, Integer posteFinal, Integer numeroDePiezas, List<Paso> pasos, Integer offset) throws Exception {
+    public static boolean esSolucionValida(Integer posteInicial, Integer posteFinal, Integer numeroDePiezas, List<Paso> pasos) throws Exception {
         
         int numeroDePostes = posteFinal - (posteInicial - 1);
         
@@ -44,9 +44,9 @@ public class Juego {
             
             List<Stack<Integer>> postes = estado.getPostes();
             
-            Integer pieza = postes.get(paso.getOrigen() - offset).pop();
+            Integer pieza = postes.get(paso.getOrigen() - posteInicial).pop();
             
-            postes.get(paso.getDestino() - offset).add(pieza);
+            postes.get(paso.getDestino() - posteInicial).add(pieza);
             
             estado = new Estado(postes);
             
